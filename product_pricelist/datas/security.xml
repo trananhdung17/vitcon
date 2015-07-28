@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Group for Product management -->
+        <record model="ir.module.category" id="category_product_management">
+            <field name="name">Products</field>
+            <field name="description">Manage Products.</field>
+            <field name="sequence">1000</field>
+        </record>
+
+        <record model="res.groups" id="group_product_user">
+            <field name="name">Users</field>
+            <field name="category_id" ref="category_product_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_product_manager">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_product_user'))]"/>
+            <field name="category_id" ref="category_product_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!-- Group for Pricelist management -->
+        <record model="ir.module.category" id="category_pricelist_management">
+            <field name="name">Pricelist</field>
+            <field name="description">Manage Pricelist.</field>
+            <field name="sequence">1001</field>
+        </record>
+
+        <record model="res.groups" id="group_pricelist_user">
+            <field name="name">Users</field>
+            <field name="category_id" ref="category_pricelist_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_pricelist_manager">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_pricelist_user'))]"/>
+            <field name="category_id" ref="category_pricelist_management"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+    </data>
+</openerp>

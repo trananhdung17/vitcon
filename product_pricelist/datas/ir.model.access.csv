@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_product_user,Access product.template for group_product_user,product_pricelist.model_product_template,group_product_user,1,0,0,0
+access_product_manager,Access product.template for group_product_manager,product_pricelist.model_product_template,group_product_manager,1,1,1,1
+access_product_category_user,Access product.category for group_product_user,product_pricelist.model_product_category,group_product_user,1,0,0,0
+access_product_category_manager,Access product.category for group_product_manager,product_pricelist.model_product_category,group_product_manager,1,1,1,1
+
+access_pricelist_user,Access pricelist for group_pricelist_user,product_pricelist.model_product_pricelist,group_pricelist_user,1,0,0,0
+access_pricelist_manager,Access pricelist for group_pricelist_manager,product_pricelist.model_product_pricelist,group_pricelist_manager,1,1,1,1
+access_pricelist_item_user,Access pricelist.item for group_pricelist_item_user,product_pricelist.model_product_pricelist_item,group_pricelist_user,1,0,0,0
+access_pricelist_item_manager,Access pricelist.item for group_pricelist_item_manager,product_pricelist.model_product_pricelist_item,group_pricelist_manager,1,1,1,1

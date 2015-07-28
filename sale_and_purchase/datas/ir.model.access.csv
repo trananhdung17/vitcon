@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_sale_order_user,Access sale.order for group_sale_salesman,sale_and_purchase.model_sale_order,base.group_sale_salesman,1,1,1,0
+access_sale_order_manager,Access sale.order for group_sale_manager,sale_and_purchase.model_sale_order,base.group_sale_manager,1,1,1,0
+access_sale_order_line_user,Access sale.order.line for group_sale_salesman,sale_and_purchase.model_sale_order_line,base.group_sale_salesman,1,1,1,0
+access_sale_order_line_manager,Access sale.order.line for group_sale_manager,sale_and_purchase.model_sale_order_line,base.group_sale_manager,1,1,1,0
+
+access_purchase_order_user,Access sale.order for group_sale_salesman,sale_and_purchase.model_purchase_order,group_purchase_manager,1,1,1,0
+access_purchase_order_manager,Access sale.order for group_sale_manager,sale_and_purchase.model_purchase_order,group_purchase_user,1,1,1,0
+access_purchase_order_line_user,Access sale.order.line for group_sale_salesman,sale_and_purchase.model_purchase_order_line,group_purchase_manager,1,1,1,0
+access_purchase_order_line_manager,Access sale.order.line for group_sale_manager,sale_and_purchase.model_purchase_order_line,group_purchase_user,1,1,1,0

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_report_root" sequence="5" name="Reports"/>
+        <menuitem id="menu_trading_report_parent" sequence="1" name="Trading Reports" parent="menu_report_root"/>
+
+        <record id="view_report_sale_config" model="ir.ui.view">
+            <field name="name">Config Sales Report</field>
+            <field name="model">ir.report.sales</field>
+            <field name="arch" type="xml">
+                <form string="Config Sales Report Form">
+                    <group col="4">
+                        <group col="2">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group col="2">
+                            <field name="state"/>
+                            <field name="sale_type"/>
+                        </group>
+
+                    </group>
+                    <button name="action_report_render" type="object" string="Statistical Order" class="oe_highlight"/>
+                    <button name="action_render_report" type="object" string="Render Report" class="oe_highlight"/>
+                    <field name="item_ids">
+                        <tree create="false" edit="false" delete="false">
+                            <field name="order_id"/>
+                            <field name="customer"/>
+                            <field name="order_date"/>
+                            <field name="amount"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="total_amount"/>
+                        </div>
+                        <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_sales_report" model="ir.actions.act_window">
+            <field name="name">Sales Report</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="res_model">ir.report.sales</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_reports_sales" parent="menu_trading_report_parent" action="action_view_sales_report" sequence="1"/>
+
+        <record id="view_report_purchase_config" model="ir.ui.view">
+            <field name="name">View Purchase Report</field>
+            <field name="model">ir.report.purchases</field>
+            <field name="arch" type="xml">
+                <form string="Config Purchase Report Form">
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <button name="action_report_render" type="object" string="Statistical Order" class="oe_highlight"/>
+                    <button name="action_render_report" type="object" string="Render Report" class="oe_highlight"/>
+                    <field name="item_ids">
+                        <tree create="false" edit="false" delete="false">
+                            <field name="order_id"/>
+                            <field name="supplier"/>
+                            <field name="order_date"/>
+                            <field name="amount"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="total_amount"/>
+                        </div>
+                        <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_purchases_report" model="ir.actions.act_window">
+            <field name="name">Purchases Report</field>
+            <field name="view_mode">form</field>
+            <field name="view_type">form</field>
+            <field name="res_model">ir.report.purchases</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_reports_purchases" parent="menu_trading_report_parent" action="action_view_purchases_report" sequence="2"/>
+    </data>
+</openerp>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="sequence_purchase_order" model="ir.sequence">
+            <field name="name">Sequence for Purchases Order</field>
+            <field name="active" eval="True"/>
+            <field name="prefix">PO%(year)s </field>
+            <field name="number_padding" eval="4"/>
+            <field name="number_next_actual" eval="1"/>
+            <field name="number_increment" eval="1"/>
+        </record>
+
+        <record id="sequence_sale_order" model="ir.sequence">
+            <field name="name">Sequence for Sales Order</field>
+            <field name="active" eval="True"/>
+            <field name="prefix">SO%(year)s </field>
+            <field name="number_padding" eval="4"/>
+            <field name="number_next_actual" eval="1"/>
+            <field name="number_increment" eval="1"/>
+        </record>
+    </data>
+</openerp>

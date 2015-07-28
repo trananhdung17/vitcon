@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sale_order_form" model="ir.ui.view">
+            <field name="name">View Sale Order Form</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Sale Form">
+                    <header>
+                        <button name="button_confirm" type="object" string="Confirm" states="draft" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
+                        <button name="button_shipping" type="object" string="Ship" states="draft,confirmed" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
+                        <button name="button_done" type="object" string="Done" states="confirmed,shipping" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="draft,confirmed" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="confirmed,shipping,done"/>
+                    </header>
+                    <sheet>
+                        <h1><field name="name" placeholder="Sale No:..."/></h1>
+                        <group col="4">
+                            <group col="2">
+                                <field name="partner_id" attrs="{'invisible': [('customer_name', '!=', False)]}"/>
+                                <field name="customer_name" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
+                                <field name="customer_address" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
+                                <field name="customer_phone" attrs="{'invisible': [('partner_id', '!=', False)]}"/>
+                            </group>
+                            <group col="2">
+                                <field name="type" invisible="context.get('not_all', False)"/>
+                                <field name="order_date"/>
+                                <field name="sale_date" attrs="{'invisible': [('type', '!=', 'order')]}"/>
+                                <field name="shipping_amount"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Order Product">
+                                <field name="order_line_ids" >
+                                    <tree editable="bottom">
+                                        <field name="code_product"/>
+                                        <field name="product_id"/>
+                                        <field name="price"/>
+                                        <field name="quantity"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="total_amount"/>
+                                    </div>
+                                    <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                                <field name="notes" class="oe_inline" placeholder="Ghi chú ..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sale_order_tree" model="ir.ui.view">
+            <field name="name">View Sale Order Tree</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="customer"/>
+                    <field name="order_date"/>
+                    <field name="sale_date"/>
+                    <field name="total_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="sale_root" name="Trading" sequence="2" />
+        <menuitem id="sale_parent" name="Sales" sequence="1" parent="sale_root"/>
+        <menuitem id="purchase_parent" name="Purchases" sequence="2" parent="sale_root"/>
+
+        <record id="action_sale_general" model="ir.actions.act_window">
+            <field name="name">All Orders</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+        </record>
+
+        <menuitem id="menu_all_order" action="action_sale_general" sequence="1" parent="sale_parent"/>
+
+        <record id="action_sale_direct_type" model="ir.actions.act_window">
+            <field name="name">Direct Sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('type','=','direct')]</field>
+            <field name="context">{'default_type': 'direct', 'not_all': True}</field>
+        </record>
+
+        <menuitem id="menu_sale_pre_order" action="action_sale_direct_type" sequence="3" parent="sale_parent"/>
+
+        <menuitem id="menu_details_order" sequence="4" parent="sale_parent" name="Pre-Order"/>
+
+        <record id="action_sale_draft" model="ir.actions.act_window">
+            <field name="name">Draft</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('state','=','draft'), ('type', '=', 'order')]</field>
+            <field name="context">{'default_type': 'order', 'not_all': True}</field>
+        </record>
+
+        <menuitem id="menu_sale_draft" action="action_sale_draft" sequence="1" parent="menu_details_order"/>
+
+        <record id="action_sale_confirm" model="ir.actions.act_window">
+            <field name="name">Confirmed</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('state','=','confirmed'), ('type', '=', 'order')]</field>
+            <field name="context">{'default_type': 'order', 'not_all': True}</field>
+        </record>
+
+        <menuitem id="menu_sale_confirm" action="action_sale_confirm" sequence="2" parent="menu_details_order"/>
+
+        <record id="action_sale_shipping" model="ir.actions.act_window">
+            <field name="name">Shipping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('state','=','shipping'), ('type', '=', 'order')]</field>
+            <field name="context">{'default_type': 'order', 'not_all': True}</field>
+        </record>
+
+        <menuitem id="menu_sale_shipping" action="action_sale_shipping" sequence="3" parent="menu_details_order"/>
+
+        <record id="action_sale_done" model="ir.actions.act_window">
+            <field name="name">Done</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('state','=','done'), ('type', '=', 'order')]</field>
+            <field name="context">{'default_type': 'order', 'not_all': True}</field>
+        </record>
+
+        <menuitem id="menu_sale_done" action="action_sale_done" sequence="4" parent="menu_details_order"/>
+
+        <record id="view_purchase_order_form" model="ir.ui.view">
+            <field name="name">View Purchase Form</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft"/>
+                        <button name="action_done" type="object" string="Done" states="confirmed"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="draft,confirmed"/>
+                        <field name="state" widget="statusbar" statusbar_visible="confirmed,done"/>
+                    </header>
+                    <sheet>
+                        <h1><field name="name"/></h1>
+                        <group col="4">
+                            <group col="2">
+                                <field name="partner_id"/>
+                            </group>
+                            <group col="2">
+                                <field name="purchase_date"/>
+                                <field name="receive_date"/>
+                            </group>
+
+                        </group>
+                        <notebook>
+                            <page string="Items">
+                                <field name="order_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="product_code"/>
+                                        <field name="product_id"/>
+                                        <field name="price"/>
+                                        <field name="quantity"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="total_amount"/>
+                                    </div>
+                                    <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                                <field name="notes" class="oe_inline" placeholder="Ghi chú ..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_tree" model="ir.ui.view">
+            <field name="name">View Purchase Tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="purchase_date"/>
+                    <field name="total_amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_all_purchase" model="ir.actions.act_window">
+            <field name="name">All Purchases</field>
+            <field name="res_model">purchase.order</field>
+            <field name="viw_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_view_all_purchase" id="menu_all_purchase" parent="purchase_parent" sequence="1"/>
+        <menuitem name="Partners"
+            id="base.menu_base_partner"
+            groups="base.group_sale_salesman"
+            sequence="20"/>
+        <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Partner" sequence="1" />
+
+    </data>
+</openerp>

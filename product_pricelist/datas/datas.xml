@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="uom_category_unit" model="product.uom.category">
+            <field name="name">Unit</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="uom_unit_unit" model="product.uom">
+            <field name="name">unit(s)</field>
+            <field name="category_id" ref="uom_category_unit"/>
+            <field name="type">standard</field>
+            <field name="rate" eval="1"/>
+        </record>
+
+        <record id="uom_unit_box" model="product.uom">
+            <field name="name">box(s)</field>
+            <field name="category_id" ref="uom_category_unit"/>
+            <field name="type">other</field>
+            <field name="rate" eval="10"/>
+        </record>
+
+        <record id="uom_category_weigh" model="product.uom.category">
+            <field name="name">Weigh</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="uom_weigh_gram" model="product.uom">
+            <field name="name">g</field>
+            <field name="description">Gram</field>
+            <field name="category_id" ref="uom_category_weigh"/>
+            <field name="type">other</field>
+            <field name="rate" eval="0.001"/>
+        </record>
+
+        <record id="uom_weigh_box" model="product.uom">
+            <field name="name">kg</field>
+            <field name="description">Kilogram</field>
+            <field name="category_id" ref="uom_category_weigh"/>
+            <field name="type">standard</field>
+            <field name="rate" eval="1"/>
+        </record>
+
+        <record id="uom_weigh_ton" model="product.uom">
+            <field name="name">ton</field>
+            <field name="description">Ton</field>
+            <field name="category_id" ref="uom_category_weigh"/>
+            <field name="type">other</field>
+            <field name="rate" eval="1000"/>
+        </record>
+
+    </data>
+</openerp>
