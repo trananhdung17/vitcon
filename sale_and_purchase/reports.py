@@ -11,9 +11,12 @@ class sale_report(models.TransientModel):
     def _compute_total_amount(self):
         for r in self:
             total_amount = 0.00
+            sales_total_amount = 0.00
             for item in r.item_ids:
-                total_amount += item.amount
+                total_amount += item.real_amount
+                sales_total_amount += item.sales_amount
             r.total_amount = total_amount
+            r.sales_total_amount = sales_total_amount
 
     name = fields.Char(string='Name')
     start_date = fields.Date(string='Start Date')
@@ -28,7 +31,8 @@ class sale_report(models.TransientModel):
         ('order', 'Pre-Order'),
         ('direct', 'Direct')], default='all', required=True, string='Sale Type')
     item_ids = fields.One2many(comodel_name='report.sale.item', inverse_name='report_id', string='Details')
-    total_amount = fields.Float(string='Total Amount', compute=_compute_total_amount)
+    total_amount = fields.Float(string='Real Total Amount:', compute=_compute_total_amount)
+    sales_total_amount = fields.Float(string='Total Amount within Standard Price:', compute=_compute_total_amount)
 
     @api.multi
     def action_report_render(self):
@@ -75,15 +79,25 @@ class sale_report(models.TransientModel):
 class report_sale_item(models.TransientModel):
     _name = 'report.sale.item'
 
+    @api.multi
+    @api.depends('order_id')
+    def _get_amount_standard(self):
+        for r in self:
+            total_amount = 0.00
+            for item in r.order_id:
+                total_amount += r.item.standard_price * item.quantity
+            r.sales_amount = total_amount
+
     report_id = fields.Many2one(comodel_name='ir.report.sales', string='Report')
     order_id = fields.Many2one(comodel_name='sale.order', string='Order No.')
     customer = fields.Char(string='Customer', related='order_id.customer')
     order_date = fields.Date(string='Order Date', related='order_id.order_date')
-    amount = fields.Float(stringn='Amount', related='order_id.total_amount')
+    real_amount = fields.Float(stringn='Amount', related='order_id.total_amount')
     state = fields.Selection([('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
         ('shipping', 'Shipping'),
         ('done', 'Done'), ('cancelled', 'Cancelled')], string='State', related='order_id.state')
+    sales_amount = fields.Float(string='Amount within Standard Price', related='order_id.sales_total_amount')
 
 class purchase_report(models.TransientModel):
     _name = 'ir.report.purchases'
@@ -158,3 +172,4 @@ class report_purchase_item(models.TransientModel):
     amount = fields.Float(stringn='Amount', related='order_id.total_amount')
     state = fields.Selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done')],
                              string='State', related='order_id.state')
+

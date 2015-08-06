@@ -10,7 +10,7 @@
                         <button name="button_confirm" type="object" string="Confirm" states="draft" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
                         <button name="button_shipping" type="object" string="Ship" states="draft,confirmed" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
                         <button name="button_done" type="object" string="Done" states="confirmed,shipping" class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
-                        <button name="action_cancel" type="object" string="Cancel" states="draft,confirmed" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="draft,shipping,confirmed" attrs="{'invisible': ['|', ('type', '=', 'direct')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="confirmed,shipping,done"/>
                     </header>
                     <sheet>

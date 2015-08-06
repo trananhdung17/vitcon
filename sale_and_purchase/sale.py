@@ -11,12 +11,15 @@ class sale_order(models.Model):
 
     @api.multi
     @api.depends('order_line_ids')
-    def compute_amount_total(self):
+    def _compute_amount_total(self):
         for r in self:
             total_amount = 0
+            sales_total_amount = 0
             for line in r.order_line_ids:
                 total_amount += line.subtotal
+                sales_total_amount += line.sales_subtotal
             r.total_amount = total_amount
+            r.sales_total_amount = sales_total_amount
 
     @api.model
     def get_default_name(self):
@@ -46,7 +49,8 @@ class sale_order(models.Model):
         ('confirmed', 'Confirmed'),
         ('shipping', 'Shipping'),
         ('done', 'Done'), ('cancelled', 'Cancelled')], string='Status', default='draft')
-    total_amount = fields.Float(string='Amount Total', compute=compute_amount_total)
+    total_amount = fields.Float(string='Amount Total', compute=_compute_amount_total)
+    sales_total_amount = fields.Float(string='Total Amount within Standard Price', compute=_compute_amount_total)
     shipping_amount = fields.Float(string='Shipping Amount')
     notes = fields.Text(string='Notes')
 
@@ -77,7 +81,7 @@ class sale_order(models.Model):
     @api.multi
     def action_cancel(self):
         for r in self:
-            if r.state in ['draft', 'confirmed']:
+            if r.state in ['draft', 'shipping','confirmed']:
                 r.state = 'cancelled'
 
     @api.model
@@ -91,9 +95,15 @@ class sale_order_line(models.Model):
 
     @api.multi
     @api.depends('price', 'quantity')
-    def compute_subtotal(self):
+    def _compute_subtotal(self):
         for r in self:
             r.subtotal = r.price * r.quantity
+
+    @api.multi
+    @api.depends('product_id', 'quantity')
+    def _compute_sales_subtotal(self):
+        for r in self:
+            r.sales_subtotal = r.product_id.standard_price * r.quantity
 
     name = fields.Char(string='Description')
     order_id = fields.Many2one(comodel_name='sale.order', string='Order')
@@ -101,10 +111,12 @@ class sale_order_line(models.Model):
     code_product = fields.Char(string='Product Code', related='product_id.code', readonly=True)
     quantity = fields.Integer(string='Quantity', default=1)
     price = fields.Float(string='Price')
-    subtotal = fields.Float(string='Subtotal', compute=compute_subtotal)
+    subtotal = fields.Float(string='Subtotal', compute=_compute_subtotal)
+    sales_subtotal = fields.Float(string='Sales Subtotal', compute=_compute_sales_subtotal)
 
     @api.one
     @api.onchange('product_id')
     def onchange_product(self):
         if self.product_id:
             self.price = self.product_id.sale_price or self.product_id.standard_price
+

@@ -18,7 +18,6 @@
                             <field name="state"/>
                             <field name="sale_type"/>
                         </group>
-
                     </group>
                     <button name="action_report_render" type="object" string="Statistical Order" class="oe_highlight"/>
                     <button name="action_render_report" type="object" string="Render Report" class="oe_highlight"/>
@@ -27,15 +26,21 @@
                             <field name="order_id"/>
                             <field name="customer"/>
                             <field name="order_date"/>
-                            <field name="amount"/>
+                            <field name="real_amount"/>
+                            <field name="sales_amount"/>
                             <field name="state"/>
                         </tree>
                     </field>
                     <group class="oe_subtotal_footer oe_right">
                         <div class="oe_subtotal_footer_separator oe_inline">
-                            <label for="total_amount"/>
+                            <label for="sales_total_amount"/>
                         </div>
-                        <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+
+                        <!--<div class="oe_subtotal_footer_separator oe_inline">-->
+                            <!--<label for="sales_total_amount"/>-->
+                        <!--</div>-->
+                        <field name="sales_total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="total_amount" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     </group>
                     <div class="oe_clear"/>
                 </form>
